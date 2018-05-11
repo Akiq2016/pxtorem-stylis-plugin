@@ -45,7 +45,7 @@ module.exports = function(options) {
                     : content + ";" + content.replace(pxRegex, pxReplace);
 
                 // if rem unit already exists, do not add or replace
-                //  if (declarationExists(decl.parent, decl.prop, value)) return;
+                // if (declarationExists(decl.parent, decl.prop, value)) return;
             }
             case -1: {
                 if (!opts.mediaQuery) return;

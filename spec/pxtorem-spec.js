@@ -102,7 +102,8 @@ describe("pxtorem", function() {
         proccessor.use(pxtorem({}));
 
         var input = ".rule { font-size: 0px; font-size: 0; }";
-        var expected = processExpected("", input);
+        var output = ".rule { font-size: 0; font-size: 0; }";
+        var expected = processExpected("", output);
         var processed = proccessor("", input);
 
         expect(processed).toBe(expected);
@@ -219,8 +220,6 @@ describe("propList", function() {
         };
         proccessor.use(pxtorem(options));
         var processed = proccessor("", css);
-        console.log(processed);
-        console.log(expected);
         expect(processed).toBe(expected);
     });
 
