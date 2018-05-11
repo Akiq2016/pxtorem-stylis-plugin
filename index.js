@@ -16,7 +16,6 @@ var defaults = {
 
 module.exports = function(options) {
     var opts = objectAssign({}, defaults, options);
-    console.log(opts);
     var pxReplace = createPxReplace(
         opts.rootValue,
         opts.unitPrecision,
@@ -31,27 +30,31 @@ module.exports = function(options) {
     return function(context, content, selectors, parent, line, column, length) {
         switch (context) {
             case 1: {
-                // console.log(context, content, selectors, parent, line, column, length, content.replace(pxRegex, pxReplace), content.match(/(.*):.*/))
-                //parent.map(console.log)
                 // This should be the fastest test and will remove most declarations
                 if (content.indexOf("px") === -1) {
                     return;
                 }
+                var property = content.match(/(.*):.*/)[1]; //
 
-                console.log("HEELLO", opts.rootValue);
-
-                if (!satisfyPropList(content.match(/(.*):.*/)[1])) {
+                if (!satisfyPropList(property)) {
                     return;
                 }
 
-                //if (blacklistedSelector(opts.selectorBlackList, decl.parent.selector)) return;
+                if (blacklistedSelector(opts.selectorBlackList, selectors))
+                    return;
 
                 return content.replace(pxRegex, pxReplace);
 
                 // if rem unit already exists, do not add or replace
                 //  if (declarationExists(decl.parent, decl.prop, value)) return;
-
-                //       decl.value = value;
+            }
+            case -1: {
+                if (!opts.mediaQuery) return;
+                if (content.indexOf("@media") === -1) return;
+                if (content.indexOf("px") === -1) return;
+                return content.replace(/@media.*{/g, function(mq) {
+                    return mq.replace(pxRegex, pxReplace);
+                });
             }
         }
     };
@@ -83,15 +86,17 @@ function declarationExists(decls, prop, value) {
     });
 }
 
-function blacklistedSelector(blacklist, selector) {
-    if (typeof selector !== "string") {
-        return;
-    }
-    return blacklist.some(function(regex) {
-        if (typeof regex === "string") {
-            return selector.indexOf(regex) !== -1;
+function blacklistedSelector(blacklist, selectors) {
+    return selectors.some(function(selector) {
+        if (typeof selector !== "string") {
+            return false;
         }
-        return selector.match(regex);
+        return blacklist.some(function(regex) {
+            if (typeof regex === "string") {
+                return selector.indexOf(regex) !== -1;
+            }
+            return selector.match(regex);
+        });
     });
 }
 
