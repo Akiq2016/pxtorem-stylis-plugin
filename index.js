@@ -1,6 +1,5 @@
 'use strict';
 
-var postcss = require('postcss');
 var objectAssign = require('object-assign');
 var pxRegex = require('./lib/pixel-unit-regex');
 var filterPropList = require('./lib/filter-prop-list');
@@ -15,76 +14,41 @@ var defaults = {
     minPixelValue: 0
 };
 
-var legacyOptions = {
-    'root_value': 'rootValue',
-    'unit_precision': 'unitPrecision',
-    'selector_black_list': 'selectorBlackList',
-    'prop_white_list': 'propList',
-    'media_query': 'mediaQuery',
-    'propWhiteList': 'propList'
-};
 
-module.exports = postcss.plugin('postcss-pxtorem', function (options) {
-
-    convertLegacyOptions(options);
+module.exports = function (options) {
 
     var opts = objectAssign({}, defaults, options);
+    console.log(opts)
     var pxReplace = createPxReplace(opts.rootValue, opts.unitPrecision, opts.minPixelValue);
 
     var satisfyPropList = createPropListMatcher(opts.propList);
+    if(!opts.replace){console.log("pxtorem doesn't support this option now")}
 
-    return function (css) {
-
-        css.walkDecls(function (decl, i) {
+    return function(context, content, selectors, parent, line, column, length){
+       switch(context) {
+       case 1: {
+           // console.log(context, content, selectors, parent, line, column, length, content.replace(pxRegex, pxReplace), content.match(/(.*):.*/))
+            //parent.map(console.log)
             // This should be the fastest test and will remove most declarations
-            if (decl.value.indexOf('px') === -1) return;
+            if (content.indexOf('px') === -1) return;
+          
+                console.log("HEELLO", opts.rootValue)
+            
+       if (!satisfyPropList(content.match(/(.*):.*/)[1])) return;
 
-            if (!satisfyPropList(decl.prop)) return;
+            //if (blacklistedSelector(opts.selectorBlackList, decl.parent.selector)) return;
 
-            if (blacklistedSelector(opts.selectorBlackList, decl.parent.selector)) return;
-
-            var value = decl.value.replace(pxRegex, pxReplace);
+            return content.replace(pxRegex, pxReplace);
 
             // if rem unit already exists, do not add or replace
-            if (declarationExists(decl.parent, decl.prop, value)) return;
+          //  if (declarationExists(decl.parent, decl.prop, value)) return;
 
-            if (opts.replace) {
-                decl.value = value;
-            } else {
-                decl.parent.insertAfter(i, decl.clone({ value: value }));
-            }
-        });
-
-        if (opts.mediaQuery) {
-            css.walkAtRules('media', function (rule) {
-                if (rule.params.indexOf('px') === -1) return;
-                rule.params = rule.params.replace(pxRegex, pxReplace);
-            });
-        }
-
-    };
-});
-
-function convertLegacyOptions(options) {
-    if (typeof options !== 'object') return;
-    if (
-            (
-                (typeof options['prop_white_list'] !== 'undefined' && options['prop_white_list'].length === 0) ||
-                (typeof options.propWhiteList !== 'undefined' && options.propWhiteList.length === 0)
-            ) &&
-            typeof options.propList === 'undefined'
-        ) {
-        options.propList = ['*'];
-        delete options['prop_white_list'];
-        delete options.propWhiteList;
+         //       decl.value = value;
     }
-    Object.keys(legacyOptions).forEach(function (key) {
-        if (options.hasOwnProperty(key)) {
-            options[legacyOptions[key]] = options[key];
-            delete options[key];
-        }
-    });
 }
+}
+
+};
 
 function createPxReplace (rootValue, unitPrecision, minPixelValue) {
     return function (m, $1) {
