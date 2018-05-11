@@ -1,3 +1,6 @@
+# This is in the process of being ported to use stylis and most of the tests outright fail.
+
+
 # postcss-pxtorem [![NPM version](https://badge.fury.io/js/postcss-pxtorem.svg)](http://badge.fury.io/js/postcss-pxtorem)
 
 A plugin for [PostCSS](https://github.com/ai/postcss) that generates rem units from pixel units.
