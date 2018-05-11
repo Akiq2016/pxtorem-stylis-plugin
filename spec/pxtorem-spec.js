@@ -63,7 +63,7 @@ describe("pxtorem", function() {
             ".rule { margin: 0.5rem 0.03125rem -0.0125rem -.2em }"
         );
         var options = {
-            propWhiteList: ["margin"]
+            propList: ["margin"]
         };
 
         proccessor.use(pxtorem(options));
@@ -196,7 +196,7 @@ describe("unitPrecision", function() {
     });
 });
 
-describe("propWhiteList", function() {
+describe("propList", function() {
     beforeEach(function() {
         proccessor = new stylis(stylisOptions);
     });
@@ -209,7 +209,7 @@ describe("propWhiteList", function() {
             ".rule { font-size: 1rem; margin: 1rem; margin-left: 5px; padding: 5px; padding-right: 1rem }"
         );
         var options = {
-            propWhiteList: [
+            propList: [
                 "*font*",
                 "margin*",
                 "!margin-left",
@@ -232,7 +232,7 @@ describe("propWhiteList", function() {
             ".rule { font-size: 16px; margin: 1rem; margin-left: 5px; padding: 5px; padding-right: 16px }"
         );
         var options = {
-            propWhiteList: ["*", "!margin-left", "!*padding*", "!font*"]
+            propList: ["*", "!margin-left", "!*padding*", "!font*"]
         };
         proccessor.use(pxtorem(options));
         var processed = proccessor("", css);
@@ -240,14 +240,14 @@ describe("propWhiteList", function() {
         expect(processed).toBe(expected);
     });
 
-    it("should replace all properties when white list is empty", function() {
+    it("should replace all properties when white list is wildcard", function() {
         var rules = ".rule { margin: 16px; font-size: 15px }";
         var expected = processExpected(
             "",
             ".rule { margin: 1rem; font-size: 0.9375rem }"
         );
         var options = {
-            propWhiteList: []
+            propList: ['*']
         };
         proccessor.use(pxtorem(options));
         var processed = proccessor("", rules);
@@ -354,7 +354,7 @@ describe("mediaQuery", function() {
 describe("minPixelValue", function() {
     it("should not replace values below minPixelValue", function() {
         var options = {
-            propWhiteList: [],
+            propList: ['*'],
             minPixelValue: 2
         };
         var rules =
