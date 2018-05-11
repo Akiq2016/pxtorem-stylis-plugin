@@ -11,22 +11,21 @@
   "bugs": "https://github.com/cuth/postcss-pxtorem/issues",
   "main": "index.js",
   "scripts": {
-    "test": "jasmine-node spec"
+    "test": "jasmine-node spec",
+    "lint": "jshint .",
+    "format": "pretty-quick"
   },
   "devDependencies": {
-    "jasmine-node": "~1.11.0"
+    "@types/prettier": "^1.12.1",
+    "jasmine-node": "~1.11.0",
+    "jshint": "^2.9.5",
+    "prettier": "1.12.1"
   },
-  "keywords": [
-    "css",
-    "rem",
-    "pixel",
-    "px",
-    "postcss",
-    "postcss-plugin"
-  ],
+  "keywords": ["css", "rem", "pixel", "px", "postcss", "postcss-plugin"],
   "dependencies": {
     "object-assign": "^4.1.0",
     "postcss": "^5.2.10",
+    "pretty-quick": "^1.4.1",
     "stylis": "^3.5.0"
   }
 }
