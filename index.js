@@ -23,9 +23,6 @@ module.exports = function(options) {
     );
 
     var satisfyPropList = createPropListMatcher(opts.propList);
-    if (!opts.replace) {
-        console.log("pxtorem doesn't support this option now");
-    }
 
     return function(context, content, selectors, parent, line, column, length) {
         switch (context) {
@@ -43,7 +40,9 @@ module.exports = function(options) {
                 if (blacklistedSelector(opts.selectorBlackList, selectors))
                     return;
 
-                return content.replace(pxRegex, pxReplace);
+                return opts.replace
+                    ? content.replace(pxRegex, pxReplace)
+                    : content + ";" + content.replace(pxRegex, pxReplace);
 
                 // if rem unit already exists, do not add or replace
                 //  if (declarationExists(decl.parent, decl.prop, value)) return;
