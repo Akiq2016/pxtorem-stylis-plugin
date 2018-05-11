@@ -1,14 +1,13 @@
-# This is in the process of being ported to use stylis and most of the tests outright fail.
+# stylis-pxtorem [![NPM version](https://badge.fury.io/js/stylis-pxtorem.svg)](http://badge.fury.io/js/stylis-pxtorem)
 
+A plugin for [Stylis](https://stylis.js.org/) that generates rem units from pixel units. 
 
-# postcss-pxtorem [![NPM version](https://badge.fury.io/js/postcss-pxtorem.svg)](http://badge.fury.io/js/postcss-pxtorem)
-
-A plugin for [PostCSS](https://github.com/ai/postcss) that generates rem units from pixel units.
+This is a port of the fantastic [postcss-pxtorem](https://github.com/cuth/postcss-pxtorem) by [cuth](https://github.com/cuth/) to stylis.
 
 ## Install
 
 ```shell
-$ npm install postcss-pxtorem --save-dev
+$ yarn add --dev stylis-pxtorem 
 ```
 
 ## Usage
@@ -36,26 +35,6 @@ h1 {
     line-height: 1.2;
     letter-spacing: 0.0625rem;
 }
-```
-
-### Example
-
-```js
-var fs = require('fs');
-var postcss = require('postcss');
-var pxtorem = require('postcss-pxtorem');
-var css = fs.readFileSync('main.css', 'utf8');
-var options = {
-    replace: false
-};
-var processedCss = postcss(pxtorem(options)).process(css).css;
-
-fs.writeFile('main-rem.css', processedCss, function (err) {
-  if (err) {
-    throw err;
-  }
-  console.log('Rem file written.');
-});
 ```
 
 ### options
@@ -90,32 +69,6 @@ Default:
 - `replace` (Boolean) replaces rules containing rems instead of adding fallbacks.
 - `mediaQuery` (Boolean) Allow px to be converted in media queries.
 - `minPixelValue` (Number) Set the minimum pixel value to replace.
-
-
-### Use with gulp-postcss and autoprefixer
-
-```js
-var gulp = require('gulp');
-var postcss = require('gulp-postcss');
-var autoprefixer = require('autoprefixer');
-var pxtorem = require('postcss-pxtorem');
-
-gulp.task('css', function () {
-
-    var processors = [
-        autoprefixer({
-            browsers: 'last 1 version'
-        }),
-        pxtorem({
-            replace: false
-        })
-    ];
-
-    return gulp.src(['build/css/**/*.css'])
-        .pipe(postcss(processors))
-        .pipe(gulp.dest('build/css'));
-});
-```
 
 ### A message about ignoring properties
 Currently, the easiest way to have a single property ignored is to use a capital in the pixel unit declaration.

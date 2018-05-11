@@ -1,14 +1,14 @@
 {
-  "name": "postcss-pxtorem",
+  "name": "stylis-pxtorem",
   "description": "A CSS post-processor that converts px to rem.",
-  "version": "4.0.1",
-  "author": "cuth",
+  "version": "0.0.1",
+  "author": "aware",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:cuth/postcss-pxtorem.git"
+    "url": "git@github.com:aware/stylis-pxtorem.git"
   },
-  "bugs": "https://github.com/cuth/postcss-pxtorem/issues",
+  "bugs": "https://github.com/aware/stylis-pxtorem/issues",
   "main": "index.js",
   "scripts": {
     "test": "jasmine",
@@ -25,8 +25,8 @@
     "rem",
     "pixel",
     "px",
-    "postcss",
-    "postcss-plugin"
+    "stylis",
+    "stylis-plugin"
   ],
   "dependencies": {
     "object-assign": "^4.1.0",
