@@ -30,7 +30,6 @@
   ],
   "dependencies": {
     "object-assign": "^4.1.0",
-    "postcss": "^5.2.10",
     "pretty-quick": "^1.4.1",
     "stylis": "^3.5.0"
   }
