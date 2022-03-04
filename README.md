@@ -45,8 +45,43 @@ If you are using styled-components v5+, you should use [stylis-pxtorem by AWare]
 
 ## Options
 
-Type: `Object | Null`  
-Default:
+```typescript
+type Options = {
+  /* The root element font size. */
+  rootValue: number;
+
+  /* The decimal numbers to allow the REM units to grow to. */
+  unitPrecision: number;
+
+  /**
+   * The properties that can change from px to rem.
+   * - Values need to be exact matches.
+   * - Use wildcard `*` to enable all properties. Example: `['*']`
+   * - Use `*` at the start or end of a word. (`['*position*']` will match `background-position-y`)
+   * - Use `!` to not match a property. Example: `['*', '!letter-spacing']`
+   * - Combine the "not" prefix with the other prefixes. Example: `['*', '!font*']` 
+   */
+  propList: string[];
+
+  /**
+   * The selectors to ignore and leave as px.
+   * - If value is string, it checks to see if selector contains the string.
+   *   - `['body']` will match `.body-class`
+   * - If value is regexp, it checks to see if the selector matches the regexp.
+   *   - `[/^body$/]` will match `body` but not `.body`
+   */
+  selectorBlackList: string[];
+
+  /* replaces rules containing rems instead of adding fallbacks. */
+  replace: boolean;
+
+  /* Set the minimum pixel value to replace. */
+  minPixelValue: number;
+}
+```
+
+Default Options
+
 ```js
 {
   rootValue: 16,
@@ -58,23 +93,6 @@ Default:
   minPixelValue: 0
 }
 ```
-
-- `rootValue` (Number) The root element font size.
-- `unitPrecision` (Number) The decimal numbers to allow the REM units to grow to.
-- `propList` (Array) The properties that can change from px to rem.
-    - Values need to be exact matches.
-    - Use wildcard `*` to enable all properties. Example: `['*']`
-    - Use `*` at the start or end of a word. (`['*position*']` will match `background-position-y`)
-    - Use `!` to not match a property. Example: `['*', '!letter-spacing']`
-    - Combine the "not" prefix with the other prefixes. Example: `['*', '!font*']` 
-- `selectorBlackList` (Array) The selectors to ignore and leave as px.
-    - If value is string, it checks to see if selector contains the string.
-        - `['body']` will match `.body-class`
-    - If value is regexp, it checks to see if the selector matches the regexp.
-        - `[/^body$/]` will match `body` but not `.body`
-- `replace` (Boolean) replaces rules containing rems instead of adding fallbacks.
-<!-- - `mediaQuery` (Boolean) Allow px to be converted in media queries. -->
-- `minPixelValue` (Number) Set the minimum pixel value to replace.
 
 ### Example
 
