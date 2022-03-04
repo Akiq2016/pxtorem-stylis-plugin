@@ -1,4 +1,4 @@
-# stylis-pxtorem [![NPM version](https://badge.fury.io/js/stylis-pxtorem.svg)](http://badge.fury.io/js/stylis-pxtorem)
+# pxtorem-stylis-plugin
 
 A plugin for [Stylis](https://stylis.js.org/) that generates rem units from pixel units. 
 
@@ -7,49 +7,54 @@ This is a port of the fantastic [postcss-pxtorem](https://github.com/cuth/postcs
 ## Install
 
 ```shell
-$ yarn add --dev stylis-pxtorem 
+$ npm install pxtorem-stylis-plugin
 ```
 
-## Usage
+## Work with styled-components v6+
 
-Pixels are the easiest unit to use (*opinion*). The only issue with them is that they don't let browsers change the default font size of 16. This script converts every px value to a rem from the properties you choose to allow the browser to set the font size.
+```javascript
+import styled, { StyleSheetManager } from "styled-components";
+import usePxtoremStylisPlugin from "pxtorem-stylis-plugin";
 
+const Box = styled.div`
+  font-size: 16px;
+  width: 100px;
+`;
 
-### Input/Output
+const pxtoremStylisPlugin = usePxtoremStylisPlugin({/* your custom options here */});
+Object.defineProperty(pxtoremStylisPlugin, "name", {
+  value: "pxtoremStylisPlugin",
+});
 
-*With the default settings, only font related properties are targeted.*
-
-```css
-// input
-h1 {
-    margin: 0 0 20px;
-    font-size: 32px;
-    line-height: 1.2;
-    letter-spacing: 1px;
-}
-
-// output
-h1 {
-    margin: 0 0 20px;
-    font-size: 2rem;
-    line-height: 1.2;
-    letter-spacing: 0.0625rem;
+export function MakeItRem() {
+  return (
+    <StyleSheetManager stylisPlugins={[pxtoremStylisPlugin]}>
+      <Box>My font-size will be 1rem.</Box>
+    </StyleSheetManager>
+  );
 }
 ```
 
-### options
+If you are using styled-components v5+, you should use [stylis-pxtorem by AWare](https://github.com/AWare/stylis-pxtorem) package instead. The way you work with styled-component is the same as the demo above; simply swapping out the package is fine.
+
+```bash
+- import usePxtoremStylisPlugin from "pxtorem-stylis-plugin";
++ import usePxtoremStylisPlugin from "stylis-pxtorem";
+```
+
+## Options
 
 Type: `Object | Null`  
 Default:
 ```js
 {
-    rootValue: 16,
-    unitPrecision: 5,
-    propList: ['font', 'font-size', 'line-height', 'letter-spacing'],
-    selectorBlackList: [],
-    replace: true,
-    mediaQuery: false,
-    minPixelValue: 0
+  rootValue: 16,
+  unitPrecision: 5,
+  propList: ['font', 'font-size', 'line-height', 'letter-spacing'],
+  selectorBlackList: [],
+  replace: true,
+  // mediaQuery: false,
+  minPixelValue: 0
 }
 ```
 
@@ -67,8 +72,30 @@ Default:
     - If value is regexp, it checks to see if the selector matches the regexp.
         - `[/^body$/]` will match `body` but not `.body`
 - `replace` (Boolean) replaces rules containing rems instead of adding fallbacks.
-- `mediaQuery` (Boolean) Allow px to be converted in media queries.
+<!-- - `mediaQuery` (Boolean) Allow px to be converted in media queries. -->
 - `minPixelValue` (Number) Set the minimum pixel value to replace.
+
+### Example
+
+*With the default settings, only font related properties are targeted.*
+
+```css
+// input
+h1 {
+  margin: 0 0 20px;
+  font-size: 32px;
+  line-height: 1.2;
+  letter-spacing: 1px;
+}
+
+// output
+h1 {
+  margin: 0 0 20px;
+  font-size: 2rem;
+  line-height: 1.2;
+  letter-spacing: 0.0625rem;
+}
+```
 
 ### A message about ignoring properties
 Currently, the easiest way to have a single property ignored is to use a capital in the pixel unit declaration.

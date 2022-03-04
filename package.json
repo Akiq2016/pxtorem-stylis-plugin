@@ -1,24 +1,21 @@
 {
-  "name": "stylis-pxtorem",
-  "description": "A CSS post-processor that converts px to rem.",
-  "version": "0.0.1",
-  "author": "aware",
-  "license": "MIT",
+  "name": "pxtorem-stylis-plugin",
+  "version": "0.0.5",
+  "description": "Fork of stylis-pxtorem, can be use with styled-components 5.x+",
+  "module": "dist/stylis-pxtorem.js",
+  "main": "dist/cjs/stylis-pxtorem.js",
+  "types": "dist/stylis-pxtorem.d.ts",
+  "scripts": {
+    "build": "tsc && tsc --module commonjs --outDir dist/cjs",
+    "test": "jest"
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:aware/stylis-pxtorem.git"
-  },
-  "bugs": "https://github.com/aware/stylis-pxtorem/issues",
-  "main": "index.js",
-  "scripts": {
-    "test": "jasmine",
-    "lint": "jshint .",
-    "format": "pretty-quick"
-  },
-  "devDependencies": {
-    "jasmine": "^3.1.0",
-    "jshint": "^2.9.5",
-    "prettier": "1.12.1"
+    "url": "git+https://github.com/Akiq2016/stylis-pxtorem.git"
   },
   "keywords": [
     "css",
@@ -26,11 +23,24 @@
     "pixel",
     "px",
     "stylis",
-    "stylis-plugin"
+    "stylis-plugin",
+    "styled-components"
   ],
-  "dependencies": {
-    "object-assign": "^4.1.0",
-    "pretty-quick": "^1.4.1",
-    "stylis": "^3.5.0"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Akiq2016/stylis-pxtorem/issues"
+  },
+  "homepage": "https://github.com/Akiq2016/stylis-pxtorem#readme",
+  "peerDependencies": {
+    "stylis": "4.x"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.2",
+    "@types/stylis": "^4.0.2",
+    "jest": "^27.3.1",
+    "prettier": "^2.4.1",
+    "stylis": "^4.0.13",
+    "ts-jest": "^27.0.7",
+    "typescript": "^4.4.4"
   }
 }
