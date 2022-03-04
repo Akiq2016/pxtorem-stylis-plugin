@@ -22,9 +22,6 @@ const Box = styled.div`
 `;
 
 const pxtoremStylisPlugin = usePxtoremStylisPlugin({/* your custom options here */});
-Object.defineProperty(pxtoremStylisPlugin, "name", {
-  value: "pxtoremStylisPlugin",
-});
 
 export function MakeItRem() {
   return (
@@ -35,11 +32,15 @@ export function MakeItRem() {
 }
 ```
 
-If you are using styled-components v5+, you should use [stylis-pxtorem by AWare](https://github.com/AWare/stylis-pxtorem) package instead. The way you work with styled-component is the same as the demo above; simply swapping out the package is fine.
+If you are using styled-components v5+, you should use [stylis-pxtorem by AWare](https://github.com/AWare/stylis-pxtorem) package instead. The way you work with styled-component is pretty same as the demo above; simply swapping out the package and add a Object.defineProperty setting is fine.
 
 ```bash
 - import usePxtoremStylisPlugin from "pxtorem-stylis-plugin";
 + import usePxtoremStylisPlugin from "stylis-pxtorem";
+
++ Object.defineProperty(pxtoremStylisPlugin, "name", {
++   value: "pxtoremStylisPlugin",
++ });
 ```
 
 ## Options

@@ -11,17 +11,27 @@ import filterPropList from "./utils/filter-prop-list";
 
 type MiddlewareParams = Parameters<Middleware>;
 
-const defaults = {
+type Options = {
+  rootValue: number,
+  unitPrecision: number,
+  selectorBlackList: string[],
+  propList: string[],
+  replace: boolean;
+  // mediaQuery: boolean
+  minPixelValue: number;
+}
+
+const defaults: Options = {
   rootValue: 16,
   unitPrecision: 5,
   selectorBlackList: [],
   propList: ["font", "font-size", "line-height", "letter-spacing"],
   replace: true,
-  mediaQuery: false,
+  // mediaQuery: false,
   minPixelValue: 0,
 };
 
-export function usePxtoremStylisPlugin(options: Record<string, unknown>) {
+export function usePxtoremStylisPlugin(options: Partial<Options>) {
   let opts = Object.assign({}, defaults, options);
   let pxReplace = createPxReplace(
     opts.rootValue,
@@ -45,12 +55,12 @@ export function usePxtoremStylisPlugin(options: Record<string, unknown>) {
         }
         // let property = content.match(/(.*):.*/)[1]; //
 
-        if (!satisfyPropList(element.props)) {
+        if (!satisfyPropList(element.props as string)) {
           return;
         }
 
         if (
-          blacklistedSelector(opts.selectorBlackList, [element.parent?.value])
+          blacklistedSelector(opts.selectorBlackList, [element.parent?.value!])
         )
           return;
 
@@ -59,22 +69,22 @@ export function usePxtoremStylisPlugin(options: Record<string, unknown>) {
           : element.value + element.value.replace(pxRegex, pxReplace);
         break;
       }
-      case MEDIA: {
-        if (!opts.mediaQuery) return;
-        if (element.value.indexOf("px") === -1) return;
-        return serialize(
-          [
-            // @ts-ignore
-            copy(element, {
-              // @ts-ignore
-              value: replace(element.value, /@media.*/g, function _(mq: any) {
-                return mq.replace(pxRegex, pxReplace);
-              }),
-            }),
-          ],
-          callback
-        );
-      }
+      // case MEDIA: {
+      //   if (!opts.mediaQuery) return;
+      //   if (element.value.indexOf("px") === -1) return;
+      //   return serialize(
+      //     [
+      //       // @ts-ignore
+      //       copy(element, {
+      //         // @ts-ignore
+      //         value: replace(element.value, /@media.*/g, function _(mq: string) {
+      //           return mq.replace(pxRegex, pxReplace);
+      //         }),
+      //       }),
+      //     ],
+      //     callback
+      //   );
+      // }
     }
   };
   Object.defineProperty(pxtoremStylisPlugin, "name", {
@@ -83,13 +93,12 @@ export function usePxtoremStylisPlugin(options: Record<string, unknown>) {
   return pxtoremStylisPlugin
 }
 
-
 function createPxReplace(
-  rootValue: any,
-  unitPrecision: any,
-  minPixelValue: any
+  rootValue: Options['rootValue'],
+  unitPrecision: Options['unitPrecision'],
+  minPixelValue: Options['minPixelValue']
 ) {
-  return function (m: any, $1: any) {
+  return function (m: string, $1: string) {
     if (!$1) {
       return m;
     }
@@ -102,18 +111,18 @@ function createPxReplace(
   };
 }
 
-function toFixed(number: any, precision: any) {
+function toFixed(number: number, precision: number) {
   let multiplier = Math.pow(10, precision + 1),
     wholeNumber = Math.floor(number * multiplier);
   return (Math.round(wholeNumber / 10) * 10) / multiplier;
 }
 
-function blacklistedSelector(blacklist: any, selectors: any) {
-  return selectors.some(function (selector: any) {
+function blacklistedSelector(blacklist: Options['selectorBlackList'], selectors: string[]) {
+  return selectors.some(function (selector: string) {
     if (typeof selector !== "string") {
       return false;
     }
-    return blacklist.some(function (regex: any) {
+    return blacklist.some(function (regex: string) {
       if (typeof regex === "string") {
         return selector.indexOf(regex) !== -1;
       }
@@ -122,7 +131,7 @@ function blacklistedSelector(blacklist: any, selectors: any) {
   });
 }
 
-function createPropListMatcher(propList: any) {
+function createPropListMatcher(propList: Options['propList']) {
   let hasWild = propList.indexOf("*") > -1;
   let matchAll = hasWild && propList.length === 1;
   let lists = {
@@ -135,31 +144,31 @@ function createPropListMatcher(propList: any) {
     notStartWith: filterPropList.notStartWith(propList),
     notEndWith: filterPropList.notEndWith(propList),
   };
-  return function (prop: any) {
+  return function (prop: string) {
     if (matchAll) {
       return true;
     }
     return (
       (hasWild ||
         lists.exact.indexOf(prop) > -1 ||
-        lists.contain.some(function (m: any) {
+        lists.contain.some(function (m: string) {
           return prop.indexOf(m) > -1;
         }) ||
-        lists.startWith.some(function (m: any) {
+        lists.startWith.some(function (m: string) {
           return prop.indexOf(m) === 0;
         }) ||
-        lists.endWith.some(function (m: any) {
+        lists.endWith.some(function (m: string) {
           return prop.indexOf(m) === prop.length - m.length;
         })) &&
       !(
         lists.notExact.indexOf(prop) > -1 ||
-        lists.notContain.some(function (m: any) {
+        lists.notContain.some(function (m: string) {
           return prop.indexOf(m) > -1;
         }) ||
-        lists.notStartWith.some(function (m: any) {
+        lists.notStartWith.some(function (m: string) {
           return prop.indexOf(m) === 0;
         }) ||
-        lists.notEndWith.some(function (m: any) {
+        lists.notEndWith.some(function (m: string) {
           return prop.indexOf(m) === prop.length - m.length;
         })
       )

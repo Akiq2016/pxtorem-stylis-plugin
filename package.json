@@ -1,6 +1,6 @@
 {
   "name": "pxtorem-stylis-plugin",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Fork of stylis-pxtorem, can be use with styled-components 6.x+",
   "module": "dist/stylis-pxtorem.js",
   "main": "dist/cjs/stylis-pxtorem.js",
